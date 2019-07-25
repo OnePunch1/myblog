@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.he.myblog.dao.AdminUserMapper">
+    <resultMap id="AdminUserResultMap" type="com.he.myblog.entity.AdminUser">
+        <id property="adminUserId" jdbcType="INTEGER" column="admin_user_id"/>
+        <result property="loginUserName" jdbcType="VARCHAR" column="login_user_name"/>
+        <result property="loginPassword" jdbcType="VARCHAR" column="login_password"/>
+        <result property="nickName" jdbcType="VARCHAR" column="nick_name"/>
+        <result property="locked" jdbcType="TINYINT" column="locked"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        admin_user_id,login_user_name,login_password,nick_name,locked
+    </sql>
+    <select id="login" resultMap="AdminUserResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from my_blog_db.tb_admin_user
+        where login_user_name = #{userName} AND login_password=#{password} AND locked = 0
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="AdminUserResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from my_blog_db.tb_admin_user
+        where admin_user_id= #{adminUserId}
+    </select>
+    <update id="updateName" parameterType="com.he.myblog.entity.AdminUser">
+        update my_blog_db.tb_admin_user
+        set
+            <if test="loginUserName!=null">
+                login_user_name=#{loginUserName},
+            </if>
+            <if test="loginPassword!=null">
+                login_password=#{loginPassword},
+            </if>
+            <if test="nickName!=null">
+                nick_name=#{nickName},
+            </if>
+            <if test="locked!=null">
+                locked=#{locked}
+            </if>
+        where admin_user_id=#{adminUserId}
+    </update>
+</mapper>
